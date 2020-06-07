@@ -1,0 +1,1 @@
+run with `node src/index.js` or `npm run build`, but the latter might not work
