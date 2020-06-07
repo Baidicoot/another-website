@@ -1,0 +1,31 @@
+.hljs,
+.hljs-subst {
+  color: white;
+}
+
+.hljs-literal,
+.hljs-string,
+.hljs-regexp,
+.hljs-number {
+    color: hotpink;
+}
+
+.hljs-symbol,
+.hljs-class,
+.hljs-type,
+.hljs-function,
+.hljs-builtin,
+.hljs-keyword {
+    color: lightblue;
+}
+
+.hljs-params,
+.hljs-attr,
+.hljs-var {
+    color: yellow;
+}
+
+.hljs-comment {
+    font-style: italic;
+    color: darkolivegreen;
+}
