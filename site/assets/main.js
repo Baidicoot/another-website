@@ -4,7 +4,7 @@ for (let i = 0; i < images.length; i++) {
     images.item(i).onclick = (_) => {
         window.location.href = images.item(i).src;
     }
-
+    /*
     images.item(i).onmouseover = (_) => {
         let alt = images.item(i).alt;
         if (alt === "") {
@@ -22,4 +22,5 @@ for (let i = 0; i < images.length; i++) {
             elems.item(i).parentNode.removeChild(elems.item(i));
         }
     }
+    */
 }

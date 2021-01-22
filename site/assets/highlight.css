@@ -4,19 +4,30 @@
 }
 
 .hljs-literal,
-.hljs-string,
 .hljs-regexp,
 .hljs-number {
-    color: hotpink;
+    color: orange;
 }
 
 .hljs-symbol,
-.hljs-class,
-.hljs-type,
-.hljs-function,
-.hljs-builtin,
+.hljs-meta {
+    color: lightgreen;
+}
+
+.hljs-builtin {
+    color: lightseagreen;
+}
+
+.hljs-function {
+    color: lightskyblue;
+}
+
 .hljs-keyword {
-    color: lightblue;
+    color: mediumvioletred;
+}
+
+.hljs-string {
+    color: hotpink;
 }
 
 .hljs-params,

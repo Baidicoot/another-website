@@ -1,28 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300&display=swap');
 
-* {
-    color: white;
-}
-
-nav {
-    padding: 1rem;
-    margin: 0;
-    background-color: #202030;
-}
-
-nav * {
-    text-decoration: none;
-    padding-right:1rem;
-}
-
 body {
     font-family: 'Roboto Slab', serif;
-    background-color: #101020;
     margin: 0;
+    width: 100%;
 }
 
 #content {
-    margin: 1rem;
+    margin: 1rem 10rem;
+    width: calc(100% - 20rem);
 }
 
 .desc {
@@ -36,29 +22,26 @@ body {
     padding: 1rem 1rem;
 }
 
-ul.gallery {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+img {
+    width: 100%;
 }
 
-ul.gallery li {
-    position: relative;
-    height: calc(100vw / 3 - 1rem);
-    flex-grow: 1;
+.half {
+    width: 50%;
+    float: left;
 }
 
-ul.gallery li img {
-    max-height: 100%;
-    object-fit: cover;
-    vertical-align: bottom;
-}
-
-ul.gallery li img:hover {
+img:hover {
     cursor: pointer;
+}
+
+a {
+    color: #101020;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #404080;
 }
 
 @media screen and (max-width: 750px) {

@@ -1,13 +1,10 @@
 ---
 description: homepage
-title: Index
 date: 02/06/2020
 ---
-You somehow managed to find my website. Welcome!
+## Projects
+- [An Open Type Theory](https://github.com/Baidicoot/att)
+- [A Compiler for an ML-Style Language](https://github.com/Baidicoot/mini)
 
-If you are actually interested, you might want to take a look at some of my (online) projects:
-- [rpncalc](../rpn/)
-- [esolangs](../esolangs/)
-
-I also occasionaly do art-related things, although this mostly consists of me messing around with cool features on OpenGL:
+## Art
 - [Gallery](../gallery/)

@@ -2,16 +2,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assets/main.css">
-    <link rel="stylesheet" href="../assets/highlight.css">
+    <link rel="stylesheet" href="${data.root}assets/main.css">
+    <link rel="stylesheet" href="${data.root}assets/highlight.css">
     <title>${data.attributes.title}</title>
 </head>
 <body>
-    <nav id="nav"><a href="../index/">Index</a><a href="../projects/">Projects</a><a href="https://github.com/Baidicoot">GitHub</a></nav>
     <div id="content">
-        <h1>${data.attributes.title}</h1>
+        <h1><a href="${data.root}index">Aidan Ewart</a></h1>
+        <hr>
         ${data.body}
     </div>
-<script src="../assets/main.js"></script>
+<script src="${data.root}assets/main.js"></script>
 </body>
 </html>
