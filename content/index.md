@@ -7,4 +7,4 @@ date: 02/06/2020
 - [A Compiler for an ML-Style Language](https://github.com/Baidicoot/mini)
 
 ## Art
-- [Gallery](../gallery/)
+- [Gallery](gallery.html)

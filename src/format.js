@@ -9,7 +9,7 @@ const format = ([dir,page]) => {
     const content = fm(data)
     content.body = marked(content.body)
     content.path = [dir,page]
-    content.root = "../".repeat(dir.length+1)
+    content.root = "../".repeat(dir.length)
     return content
 };
 
@@ -27,11 +27,11 @@ const generate = posts => {
         recMkDir(config.outdir,[...post.path[0],post.path[1]])
         
         fs.writeFile(
-            `${config.outdir}${post.path[0].join("")}${post.path[1]}/index.html`,
+            `${config.outdir}${post.path[0].join("")}${post.path[1]}.html`,
             templates.page(post),
             e => {
                 if (e) throw e
-                console.log(`${post.path[0].join("")}${post.path[1]}/index.html was created successfully`)
+                console.log(`${post.path[0].join("")}${post.path[1]}.html was created successfully`)
             })
     })
 }
