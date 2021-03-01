@@ -2,12 +2,12 @@ const config = require("./config");
 const templates = require("./templates");
 const fs = require("fs");
 const fm = require("front-matter");
-const marked = require("./marked-config");
+const md = require("./remarked-config");
 
 const format = ([dir,page]) => {
     const data = fs.readFileSync(`${config.indir}${dir.join("")}${page}.md`, "utf8")
     const content = fm(data)
-    content.body = marked(content.body)
+    content.body = md.render(content.body)
     content.path = [dir,page]
     content.root = "../".repeat(dir.length)
     return content
@@ -24,7 +24,7 @@ const recMkDir = (root,dir) => {
 
 const generate = posts => {
     posts.forEach(post => {
-        recMkDir(config.outdir,[...post.path[0],post.path[1]])
+        recMkDir(config.outdir,post.path[0])
         
         fs.writeFile(
             `${config.outdir}${post.path[0].join("")}${post.path[1]}.html`,
