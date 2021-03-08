@@ -1,5 +1,6 @@
 const extensions = {
     "v": "coq",
+    "hs": "haskell"
 };
 
 const config = {

@@ -303,7 +303,7 @@ Essentially, given an equation for a recursive function $r$, one can express the
 
 ### An Evaluator for the $\lambda$-Calculus
 
-With the ability to create arbitrary recursive functions we can finally encode an evaluator for the $\lambda$-calculus within the set theory. I will be translating a barebones Haskell evaluator for $\lambda_{dB}$, with each Haskell function corresponding to a set-theoretic one.
+With the ability to create arbitrary recursive functions we can finally encode an evaluator for the $\lambda$-calculus within the set theory. I will be translating a barebones [Haskell evaluator](src/eval.hs.html) for $\lambda_{dB}$, with each Haskell function corresponding to a set-theoretic one.
 
 I wanted to keep my evaluator as simple as possible, so I opted to write a 'call-by-name weak-head-normal-form' evaluator; 'call-by-name' means that a function's argument is not evaluated to normal form before being substituted into the function's body, while 'weak-head-normal-form' means that any abstraction $(\lambda . b)$ is in normal form, even if $b$ is not.
 
@@ -375,7 +375,7 @@ lower (i, App f a) =
     let g = lower (i, f)
         b = lower (i, a)
     in App g b
-lower i (Lam b) =
+lower (i, Lam b) =
     let c = lower (i+1, b)
     in Lam c
 
@@ -430,9 +430,10 @@ eval :: Term -> Term
 eval (Lam b) = Lam b
 eval (App f a) =
     let (Lam b) = eval f
-        sb = subst 0 a b
-        ex = eval sb
-    in ex
+        sb = subst (0, a, b)
+        lb = lower (0, sb)
+        vb = eval lb
+    in vb
 ```
 
 This is easily translated into IZF:
