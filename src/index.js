@@ -7,10 +7,19 @@ const treepages = (root,dir) => fs
   .map(page => fs.lstatSync(root+dir.join("")+page).isDirectory() ? treepages(root,[...dir,page+"/"]) : [[dir,page]])
   .reduce((a,b) => [...a,...b], [])
 
-const pages = treepages(config.indir,[])
+const files = treepages(config.indir,[])
+
+const pages = files
+  .filter(([dir,page]) => page.slice(-3) === ".md")
   .map(([dir,page]) => [dir,page.slice(0, -3)])
-  .map(page => format.format(page))
+  .map(format.format)
+
+const sourcefiles = files
+  .map(([dir,page]) => [dir,page.slice(0,page.lastIndexOf('.')),page.slice(page.lastIndexOf('.')+1)])
+  .filter(([dir,page,ext]) => ext in config.extensions)
+  .map(format.formatSrc)
 
 if (!fs.existsSync(config.outdir)) fs.mkdirSync(config.outdir);
 
 format.generate(pages);
+format.generateSrc(sourcefiles);

@@ -63,10 +63,12 @@ const att = (hljs) => {
   }
 }
 
+hljs.registerLanguage("rpncc", rpncc);
+hljs.registerLanguage("att", att);
+
 var md = new remarkable.Remarkable({
+  html: true,
   highlight: function (str, lang) {
-    hljs.registerLanguage("rpncc", rpncc);
-    hljs.registerLanguage("att", att);
     if (lang && hljs.getLanguage(lang)) {
       try {
         return hljs.highlight(lang, str).value;
@@ -81,4 +83,4 @@ var md = new remarkable.Remarkable({
 
 md.use(katex)
 
-module.exports = md;
+module.exports = {md: md, hljs: hljs};
