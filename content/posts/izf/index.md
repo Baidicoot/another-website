@@ -8,13 +8,13 @@ I've recently been reading about [Peter Aczel's interpretation](https://www.jsto
 
 ### Axiomatic Set Theory
 
-CZF is an 'axiomatic' set theory, meaning that one may only 'construct' sets by using the particular rules, called 'axioms', which make up the theory. The reason for this is twofold; firstly, the axiomisation of the set theory avoids the possibility of subtle inconsistencies which can invalidate proofs - the commonly-cited example is [Russell's paradox](https://en.wikipedia.org/wiki/Russell%27s_paradox).
+CZF is an 'axiomatic' set theory, meaning that one may only 'construct' sets by using the particular rules, called axioms, which make up the theory. The reason for this is twofold; firstly, the axiomisation of the set theory avoids the possibility of subtle inconsistencies which can invalidate proofs - the commonly-cited example is [Russell's paradox](https://en.wikipedia.org/wiki/Russell%27s_paradox).
 
-Secondly, by limiting axioms to those which have an obvious _construction_ (meaning an algorithm which they represent), we can restrict sets to those that we can create (as opposed to sets that we can prove the existence of). Such a system of axioms is called a 'constructive' theory; using non-constructive theories, such as [Zermelo-Fraenkel Set Theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory) (ZF), mathematicians can prove results which seem counterintuitive, such as the [Banach-Tarski paradox](https://en.wikipedia.org/wiki/Banach%E2%80%93Tarski_paradox) (which relies on the non-constructive 'axiom of choice').
+Secondly, we can limit the axioms of our system to those that are _constructive_, meaning that each axiom (abstractly) represents a 'computation' or 'algorithm' of some sort; such a system of axioms is called a constructive theory. This has the interesting property that proofs in constructive theories can be thought of as descriptions of computations: for example, a proof of $A \to B$ can be thought of as an algorithm for constructing a proof of $B$ given a proof of $A$.
 
-The distinction between constructive and non-constructive axioms and theories is mostly philosphical, as some non-constructive axioms (such as the law of the excluded middle) may seem perfectly intuitive on the surface.
+Using non-constructive theories, such as [Zermelo-Fraenkel Set Theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory) (ZF), mathematicians can prove results which seem counterintuitive, such as the [Banach-Tarski paradox](https://en.wikipedia.org/wiki/Banach%E2%80%93Tarski_paradox) (which relies on the non-constructive 'axiom of choice'). The distinction between constructive and non-constructive axioms and theories is mostly philosophical, as some non-constructive axioms (such as the law of the excluded middle or the powerset) may seem perfectly intuitive on the surface.
 
-Most set theories are but an extension of an 'underlying language' of [logic](https://en.wikipedia.org/wiki/First-order_logic) (classical logic for ZF, intuonistic logic for CZF) with the aformentioned axioms for set construction. This underlying language usually includes the normal logical operators and quantifiers, and a statement in this language is called a _predicate_. Luckily for us, many logics have already been implemented as programs for computers. This means we need not check our proofs manually; the program automatically checks the soundness of our reasoning for us!
+Most set theories are but an extension of an 'underlying language' of [logic](https://en.wikipedia.org/wiki/First-order_logic) (classical logic for ZF, intuonistic logic for CZF) with the aforementioned axioms for set construction. This underlying language usually includes the normal logical operators and quantifiers, and a statement in this language is called a _predicate_. Luckily for us, many logics have already been implemented as programs for computers. This means we need not check our proofs manually; the program automatically checks the soundness of our reasoning for us!
 
 These systems are called 'automated theorem provers' and are quite a mature technology; I will extend one, [Coq](https://coq.inria.fr/), with axioms for the construction of sets. The actual set theory I will use is called 'Intuonistic Zermelo-Fraenkel Set Theory'; as the name suggests, it is similar to CZF, but is slightly 'less' constructive. It admits the following axioms:
 
@@ -23,19 +23,19 @@ These systems are called 'automated theorem provers' and are quite a mature tech
 - The 'axiom of the empty set'. This says that there is a set with no elements, which I write as $\emptyset$ or `∅` in Coq.
 - The 'axiom of the pair'; if $a$ and $b$ are sets, then $\{a, b\}$ is a set. When used in conjunction with the above two axioms, this means that we can write sets by listing their elements.
 - The 'axiom of infinity'. Commonly used as a 'superset' of the natural numbers, this is a set $\infty$ such that if $\emptyset \in \infty$ and if $x \in \infty$, then $\mathrm{Suc}(x) \in \infty$, where $\mathrm{Suc}(x) = \bigcup \{x, \{x\}\}$.
-- The 'axiom of seperation'. If $x$ is a set, then we can construct a new set $y$ of all the members $a \in x$ such that $\phi(x)$ holds for some property $\phi$. Informally, this is commonly written $\{a \in x : \phi(x)\}$, but I also use $\{a : \forall a \in x, \phi(x)\}$.
+- The 'axiom of separation'. If $x$ is a set, then we can construct a new set $y$ of all the members $a \in x$ such that $\phi(x)$ holds for some property $\phi$. Informally, this is commonly written $\{a \in x : \phi(x)\}$, but I also use $\{a : \forall a \in x, \phi(x)\}$.
 - The 'axiom of replacement'. This is similar to the above axiom, except instead of selecting the members of $x$ that satisfy some property, we construct a new set of all the $f(a)$ where $a \in x$, for some _functional predicate_ $f$ (such a predicate is a property $\phi(x,y)$ where for all $x$, a $y$ exists; we write this $y$ as $f(x)$). I write this $\{f(a) : \forall a \in x\}$.
-- The 'axiom of the powerset'. This states that for all $x$, there is a set $\mathcal{P}(x)$ consisting of the subsets of $x$. This axiom is non-constructive as there is no algorithm that (even given an infinite amount of time) can produce all the subsets of any _infinite_ set.
+- The 'axiom of the powerset'. This states that for all $x$, there is a set $\mathcal{P}(x)$ consisting of the subsets of $x$. This axiom is non-constructive as there is no algorithm that (even given an infinite amount of time) can produce all the subsets of any _infinite_ set; this is an immediate consequence of Cantor's diagonalization theorem.
 - The 'axiom of $\in$-induction'. This is essentially [well-founded induction](https://en.wikipedia.org/wiki/Well-founded_relation#Induction_and_recursion) on the $\in$ relation; if a property holding of all $a \in x$ implies that the property holds of $x$, then the property holds of all sets.
 
-I describe the process of creating a _model_ (an 'encoding') for this set theory in Coq in [Addenum I](extra.html#addenum_1). You can view the _axiomisation_ of IZF in Coq [here](src/IZF.v.html).
+I describe the process of creating a _model_ (an 'encoding') for this set theory in Coq in [addendum I](extra.html#addendum_1). You can view the _axiomisation_ of IZF in Coq [here](src/IZF.v.html).
 
 Somewhat amazingly, using only these axioms, one is able to 'construct' much of modern mathematics, as we shall soon see!
 
 ### Set-Theoretic Constructions
-As a first example construction, let us consider the cartesian product of two sets $A \times B$. For any sets $A$ and $B$, $A \times B$ should have the property that for any $x \in A$ and $y \in B$, $\langle x, y \rangle \in A \times B$, where $\langle x, y \rangle$ denotes the ordered pair of $x$ and $y$, constructed in the usual way as $\{\{x\}, \{x, y\}\}$.
+As a first example construction, let us consider the Cartesian product of two sets $A \times B$. For any sets $A$ and $B$, $A \times B$ should have the property that for any $x \in A$ and $y \in B$, $\langle x, y \rangle \in A \times B$, where $\langle x, y \rangle$ denotes the ordered pair of $x$ and $y$, constructed in the usual way as $\{\{x\}, \{x, y\}\}$.
 
-For a given $x \in A$, we can construct the set $\{\langle x, y \rangle : \forall y \in B\}$ by the axiom of replacement and a predicate $\phi(y,z)$ defined as $z = \langle x, y \rangle$. Clearly, this predicate is functional. Call this process $f(x)$, and we can then apply replacement *again*, this time using $f$, to generate the indexed set $(z_x)_{x \in A}$. Taking $\bigcup_{x \in A}z_x$, and we have the cartesian product $A \times B$:
+For a given $x \in A$, we can construct the set $\{\langle x, y \rangle : \forall y \in B\}$ by the axiom of replacement and a predicate $\phi(y,z)$ defined as $z = \langle x, y \rangle$. Clearly, this predicate is functional. Call this process $f(x)$, and we can then apply replacement *again*, this time using $f$, to generate the indexed set $(z_x)_{x \in A}$. Taking $\bigcup_{x \in A}z_x$, and we have the Cartesian product $A \times B$:
 
 ```coq
 Definition cartesian_product (A B: set) :=
@@ -59,7 +59,7 @@ Lemma is_disjoint_union :
          y ∈ f x p -> ⟨x,y⟩ ∈ disjoint_union f.
 ```
 
-That derivation is almost identical to our derivation for the cartesian product! In fact, the cartesian product is *definitionally equal* to the case of the disjoint union where $x_i$ is always $B$ for any $i \in A$:
+That derivation is almost identical to our derivation for the Cartesian product! In fact, the Cartesian product is *definitionally equal* to the case of the disjoint union where $x_i$ is always $B$ for any $i \in A$:
 
 ```coq
 Lemma cartesian_product_is_extreme_disjoint_union :
@@ -91,7 +91,7 @@ Lemma disjoint_union2_prop : forall {A B x},
   x ∈ A + B <-> (exists a, x ≡ left a /\ a ∈ A) \/ (exists b, x ≡ right b /\ b ∈ B).
 ```
 
-We can derive a stronger form of our axiom of infinity by seperating out the elements of $\infty$ that satisfy the _inductive property_. The inductive property, which is written $\mathrm{Ind}(x)$, says that 'if $\phi(\emptyset)$ and for all $\phi(a)$ we can derive $\phi(\mathrm{Suc}(a))$, then we can derive $\phi(x)$ for any property $\phi$':
+We can derive a stronger form of our axiom of infinity by separating out the elements of $\infty$ that satisfy the _inductive property_. The inductive property, which is written $\mathrm{Ind}(x)$, says that 'if $\phi(\emptyset)$ and for all $\phi(a)$ we can derive $\phi(\mathrm{Suc}(a))$, then we can derive $\phi(x)$ for any property $\phi$':
 
 $$
 \mathrm{Ind}(x) = \forall \phi, (\phi(\emptyset) \wedge \forall a, \phi(a) \to \phi(\mathrm{Suc}(a))) \to \phi(x)
@@ -113,7 +113,7 @@ $$
 \exists \omega, \forall \phi, \phi(\emptyset) \wedge (\forall n, \phi(n) \to \phi(\mathrm{Suc}(n))) \to \forall x \in \omega, \phi(x)
 $$
 
-The exponential set $A^B$, of functions $f : B \to A$ has a pretty obvious construction; all functions $B \to A$ are subsets of $B \times A$, and so to construct $A^B$ we can simply restrict $\mathcal{P}(B \times A)$ to only those subsets $R$ which are *functional* (for all $x \in B$, if $\langle x, y \rangle \in R$ for a $y \in A$, then $y$ is unique) and *left-total* (for all $x \in B$, there exists a $y \in A$ such that $\langle x, y \rangle \in R$), using seperation:
+The exponential set $A^B$, of functions $f : B \to A$ has a pretty obvious construction; all functions $B \to A$ are subsets of $B \times A$, and so to construct $A^B$ we can simply restrict $\mathcal{P}(B \times A)$ to only those subsets $R$ which are *functional* (for all $x \in B$, if $\langle x, y \rangle \in R$ for a $y \in A$, then $y$ is unique) and *left-total* (for all $x \in B$, there exists a $y \in A$ such that $\langle x, y \rangle \in R$), using separation:
 
 ```coq
 Definition functional (R: set) :=
@@ -123,7 +123,7 @@ Definition left_total (R D: set) :=
   forall {a}, a ∈ D -> exists {b}, ⟨a,b⟩ ∈ R.
 
 Definition exponential (A B: set) :=
-  seperation (fun R => functional R /\ left_total R B) (powerset (B × A)).
+  separation (fun R => functional R /\ left_total R B) (powerset (B × A)).
 
 Lemma member_exp_function :
   forall {A B R}, R ∈ exponential A B -> functional R /\ left_total R B.
@@ -169,7 +169,7 @@ Axiom ϵ_rec_prop : forall {F x},
   ϵ_rec F x ≡ F x (fun y _ => ϵ_rec F y).
 ```
 
-This is the last axiom I will add to the system; everything else is derived from the Coq model described in [Addenum I](extra.html#addenum_1).
+This is the last axiom I will add to the system; everything else is derived from the Coq model described in [addendum I](extra.html#addendum_1).
 
 ### Inductively Defined Sets
 
@@ -190,7 +190,7 @@ It is often possible to gain an understanding of what the least fixed point of a
 
 For example, we can write the description for the terms of the $\lambda$-calculus as $\Gamma_\lambda(X) = \mathrm{vars} + \mathrm{vars} \times X + X \times X$, given a set of variables $\mathrm{vars}$. The constant term $\mathrm{vars}$ is the base case - we can construct a $\lambda$-term from a variable. The second term states that we can construct a $\lambda$-term from another $\lambda$-term _and_ a variable - this is the abstraction $(\lambda v. M)$. Finally, with two $\lambda$-terms - $X \times X$ - we can construct $(M N)$, which is itself a $\lambda$-term.
 
-We can 'isolate' the base cases of any polynomial $\Gamma$ by taking $\Gamma(\emptyset)$; any other varying term must be in the form $a \times \emptyset^n$ for $n > 0$. Since $\emptyset$ has no members, then the cartesian product of any set with $\emptyset$ must also have no members. As these constant terms are always 'included' in $\Gamma(X)$ for all $X$, we have $\Gamma(\emptyset) \subseteq \Gamma(X)$. We can use this property to algorithmicaly construct the least fixed point for $\Gamma$.
+We can 'isolate' the base cases of any polynomial $\Gamma$ by taking $\Gamma(\emptyset)$; any other varying term must be in the form $a \times \emptyset^n$ for $n > 0$. Since $\emptyset$ has no members, then the Cartesian product of any set with $\emptyset$ must also have no members. As these constant terms are always 'included' in $\Gamma(X)$ for all $X$, we have $\Gamma(\emptyset) \subseteq \Gamma(X)$. We can use this property to algorithmically construct the least fixed point for $\Gamma$.
 
 The least fixed point of any $\Gamma$ should contain all base cases - $\Gamma(\emptyset)$ - all terms constructed from the base cases - $\Gamma(\Gamma(\emptyset))$ - and so on. This gives us a candidate for the least fixed point $\emptyset \cup \Gamma(\emptyset) \cup \Gamma(\Gamma(\emptyset)) \cup \dots$, alternatively expressed as $\bigcup_{i=0}^\infty \Gamma^i(\emptyset)$. In order to prove that this actually is a fixed point of $\Gamma$, we need to prove:
 
@@ -255,15 +255,15 @@ This approach generalises quite well and so can be used to implement the syntax 
 
 ### Terms of the $\lambda$-Calculus
 
-For an explanation of the $\lambda$-calculus see [Addenum II](extra.html#addenum_2). I'll go ahead and assume you already know what it is now, so be warned!
+For an explanation of the $\lambda$-calculus see [addendum II](extra.html#addendum_2). I'll go ahead and assume you already know what it is now, so be warned!
 
 To keep complexity to a minimum, I will create a model of the $\lambda$-calculus using [de Brujin indices](https://en.wikipedia.org/wiki/De_Bruijn_index) instead of the normal variables. Problems can arise when normalising $\lambda$-terms meaning you have to _rename_ bound variables in order to avoid 'name conflicts'. Consider the evaluation of $((\lambda y. (\lambda x. y)) x)$. Naively performing a $\beta$-reduction on this term yields $(\lambda x. x)$, which is probably not what was intended - the free $x$ has suddenly become bound.
 
-To avoid this issue, de Brujin instead used natural numbers to represent variables, and removed variables from abstractions alltogether; when a natural number variable occurs in an expression, the 'value' of the variable directly refers to the abstraction to which it is bound. Specifically, a variable $n$ has $n$ other abstractions between it and the abstraction to which is is bound. For example, using de Brujin indices, the expression $(\lambda x. x)$ becomes $(\lambda. 0)$ and the expression $(\lambda x. (\lambda y. x y))$ becomes $(\lambda. (\lambda. 1 0))$.
+To avoid this issue, de Brujin instead used natural numbers to represent variables, and removed variables from abstractions altogether; when a natural number variable occurs in an expression, the 'value' of the variable directly refers to the abstraction to which it is bound. Specifically, a variable $n$ has $n$ other abstractions between it and the abstraction to which it is bound. For example, using de Brujin indices, the expression $(\lambda x. x)$ becomes $(\lambda. 0)$ and the expression $(\lambda x. (\lambda y. x y))$ becomes $(\lambda. (\lambda. 1 0))$.
 
 Unfortunately, de Brujin indices are not an entirely free lunch. When substituting using de Brujin indices, we need to increment free variables in the expression being substituted every time we pass a $\lambda$-abstraction, so they do not become bound mistakenly. For example, we would not like $((\lambda. (\lambda. 1)) 0)$ to $\beta$-reduce to $(\lambda. 0)$; instead we have to 'lift' the free variables in the expression $0$ to reduce it to $(\lambda. 1)$. Moreover, we need to 'lower' free variables whenever we take the body out from an abstraction.
 
-With de Brujin indices, $\lambda_{dB}$-terms have the following syntax:
+$\lambda$-terms using de Brujin indices ($\lambda_{dB}$-terms) the following syntax:
 
 - any natural number (member of $\omega$) is a term
 - if $M$ is a term, $(\lambda. M)$ is a term
@@ -321,15 +321,15 @@ f = \bigcup_{i = 0}^\omega \Gamma_f^i(\emptyset)
 \end{gathered}
 $$
 
-Essentially, given an equation for a recursive function $r$, one can express the 'term' of the description corresponding to that equation by replacing each recursive application $r(a)$ in the right-hand-side of the equation with an element $x$ of $\mathrm{img}(r)$; a case may then be 'added' to the function if $\langle a, x \rangle$ is already a member of the function. We can write definitions for (both total and partial) _general recursive_ functions using this method - a general recursive function being one that you can program an algorithm to solve. For a nontrivial example, see [Addenum III](extra.html#addenum_3).
+Essentially, given an equation for a recursive function $r$, one can express the 'term' of the description corresponding to that equation by replacing each recursive application $r(a)$ in the right-hand-side of the equation with an element $x$ of $\mathrm{img}(r)$; a case may then be 'added' to the function if $\langle a, x \rangle$ is already a member of the function. We can write definitions for (both total and partial) _general recursive_ functions using this method - a general recursive function being one that you can program an algorithm to solve. For a nontrivial example, see [addendum III](extra.html#addendum_3).
 
 ### An Evaluator for the $\lambda$-Calculus
 
-With the ability to create arbitrary recursive functions we can finally encode an evaluator for the $\lambda$-calculus within the set theory. I will be translating a barebones [Haskell evaluator](src/eval.hs.html) for $\lambda_{dB}$, with each Haskell function corresponding to a set-theoretic one.
+With the ability to create arbitrary recursive functions we can finally encode an evaluator for the $\lambda$-calculus within the set theory. I will be translating a minimal [Haskell evaluator](src/eval.hs.html) for $\lambda_{dB}$, with each Haskell function corresponding to a set-theoretic one.
 
-I wanted to keep my evaluator as simple as possible, so I opted to write a 'call-by-name weak-head-normal-form' evaluator; 'call-by-name' means that a function's argument is not evaluated to normal form before being substituted into the function's body, while 'weak-head-normal-form' means that any abstraction $(\lambda . b)$ is in normal form, even if $b$ is not.
+I wanted to keep my evaluator as simple as possible, so I opted to write a 'call-by-name weak-head-normal-form' (CBV WHNF) evaluator; 'call-by-name' means that a function's argument is not evaluated to normal form before being substituted into the function's body, while 'weak-head-normal-form' means that any abstraction $(\lambda . b)$ is in normal form, even if $b$ is not.
 
-First off, the Haskell implementation defines two functions, `lift` and `lower`, to handle lifiting and lowering of free variables in de Brujin-indexed $\lambda$-terms as described above. I have assigned new variables to each function call to simplify the translation process, and better display the similarities between the Haskell and IZF implementations:
+First off, the Haskell implementation defines two functions, `lift` and `lower`, to handle lifting and lowering of free variables in de Brujin-indexed $\lambda$-terms as described above. I have assigned new variables to each function call to simplify the translation process, and better display the similarities between the Haskell and IZF implementations:
 
 ```haskell
 data Term

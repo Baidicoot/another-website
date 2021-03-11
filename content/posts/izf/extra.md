@@ -6,9 +6,9 @@ title: The λ-Calculus, in Set Theory, in Coq - Extras
 
 A collection of extra, vaguely rambling, content that didn't make it into the [final version](index.html).
 
-<span id="addenum_1"></span>
+<span id="addendum_1"></span>
 
-## Addenum I - Coq Encoding of Intuonistic Set Theory
+## addendum I - Coq Encoding of Intuonistic Set Theory
 
 Coq, which implements a type theory not dissimilar to MLTT, the 'Calculus of Inductive Constructions' (CIC), provides the perfect environment in which to interpret set theory à la Aczel; 'inductive types', the types created with the $\mathbb{W}$ axiom in MLTT, come 'free' in Coq, meaning you needn't [worry about extensionality](https://mazzo.li/epilogue/index.html%3Fp=324.html) when using them. Moreover, Coq already has a impredicative universe of propositions, `Prop`, which corresponds to Aczel's universe $\mathbb{P}$. Aside from theoretic concerns, Coq's handling of custom notations is definitely something to envy.
 
@@ -264,9 +264,9 @@ Lemma maximum :
   forall {x y}, x ∈ ω -> y ∈ ω -> exists m, m ∈ ω /\ x ⊆ m /\ y ⊆ m.
 ```
 
-<span id="addenum_2"></span>
+<span id="addendum_2"></span>
 
-## Addenum II - The $\lambda$-Calculus
+## addendum II - The $\lambda$-Calculus
 
 The $\lambda$-calculus (LC) is a system used to express computation. Much like in arithmetic, computing the value of an expression involves applying a series of transformations upon the expression until it reaches a 'normal form' (consider the transformations used to reduce $2 + 5 + 8$ to $13$). An expression, or _term_, of the $\lambda$-calculus can be created with the following rules:
 
@@ -284,9 +284,9 @@ As an example, the expression $((\lambda x. x) (\lambda y. y))$ is not an abstra
 
 Not all terms actually have a normal form; consider the expression $((\lambda x. (x x)) (\lambda x. (x x)))$. Applying $\beta$-reduction on this means we substitute all free occurances of $x$ with $(\lambda x. (x x))$ in the expression $(x x)$. This is simply $((\lambda x. (x x)) (\lambda x. (x x)))$, which is exactly the expression we started with, meaning that no amount of $\beta$-reduction will succeed in producing a normal form for this expression. Therefore, evaluation (simplifying an expression to a normal form) is a partial function.
 
-<span id="addenum_3"></span>
+<span id="addendum_3"></span>
 
-## Addenum III - Inductively Defined Functions
+## addendum III - Inductively Defined Functions
 
 Consider the Ackerman-Péter function:
 
