@@ -19,7 +19,10 @@ const sourcefiles = files
   .filter(([dir,page,ext]) => ext in config.extensions)
   .map(format.formatSrc)
 
+const assetfiles = treepages(config.assets,[])
+
 if (!fs.existsSync(config.outdir)) fs.mkdirSync(config.outdir);
 
 format.generate(pages);
 format.generateSrc(sourcefiles);
+format.copyAssets(assetfiles);

@@ -64,9 +64,22 @@ const generateSource = sourcefiles => {
     })
 }
 
+const copyAssets = assetfiles => {
+    assetfiles.forEach(path => {
+        recMkDir(config.outdir,["assets/",...path[0]])
+
+        fs.copyFile(
+            `${config.assets}${path[0].join("")}${path[1]}`,
+            `${config.outdir}assets/${path[0].join("")}${path[1]}`,
+            e => {if (e) throw e})
+    })
+    console.log("copied assets")
+}
+
 module.exports = {
     format: format,
     generate: generate,
     formatSrc: formatSource,
-    generateSrc: generateSource
+    generateSrc: generateSource,
+    copyAssets: copyAssets,
 };

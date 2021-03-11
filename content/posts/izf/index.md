@@ -10,11 +10,11 @@ I've recently been reading about [Peter Aczel's interpretation](https://www.jsto
 
 CZF is an 'axiomatic' set theory, meaning that one may only 'construct' sets by using the particular rules, called 'axioms', which make up the theory. The reason for this is twofold; firstly, the axiomisation of the set theory avoids the possibility of subtle inconsistencies which can invalidate proofs - the commonly-cited example is [Russell's paradox](https://en.wikipedia.org/wiki/Russell%27s_paradox).
 
-Secondly, by limiting axioms to only those which have an obvious _construction_ (meaning an algorithm which they represent), we can restrict sets only those that we can create (as opposed to just asserting the existence of). Such a system of axioms is called a 'constructive' theory; using non-constructive theories, such as [Zermelo-Fraenkel Set Theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory) (ZF), mathematicians can prove results which seem counterintuitive, such as the [Banach-Tarski paradox](https://en.wikipedia.org/wiki/Banach%E2%80%93Tarski_paradox) (which relies on the non-constructive 'axiom of choice').
+Secondly, by limiting axioms to those which have an obvious _construction_ (meaning an algorithm which they represent), we can restrict sets to those that we can create (as opposed to sets that we can prove the existence of). Such a system of axioms is called a 'constructive' theory; using non-constructive theories, such as [Zermelo-Fraenkel Set Theory](https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory) (ZF), mathematicians can prove results which seem counterintuitive, such as the [Banach-Tarski paradox](https://en.wikipedia.org/wiki/Banach%E2%80%93Tarski_paradox) (which relies on the non-constructive 'axiom of choice').
 
 The distinction between constructive and non-constructive axioms and theories is mostly philosphical, as some non-constructive axioms (such as the law of the excluded middle) may seem perfectly intuitive on the surface.
 
-Most set theories are but an extension of an 'underlying language' of logic (classical logic for ZF, intuonistic logic for CZF) with the aformentioned axioms for set construction. Luckily for us, many logics have already been implemented as programs for computers. This means we need not check our proofs manually; the program automatically checks the soundness of our reasoning for us!
+Most set theories are but an extension of an 'underlying language' of [logic](https://en.wikipedia.org/wiki/First-order_logic) (classical logic for ZF, intuonistic logic for CZF) with the aformentioned axioms for set construction. This underlying language usually includes the normal logical operators and quantifiers, and a statement in this language is called a _predicate_. Luckily for us, many logics have already been implemented as programs for computers. This means we need not check our proofs manually; the program automatically checks the soundness of our reasoning for us!
 
 These systems are called 'automated theorem provers' and are quite a mature technology; I will extend one, [Coq](https://coq.inria.fr/), with axioms for the construction of sets. The actual set theory I will use is called 'Intuonistic Zermelo-Fraenkel Set Theory'; as the name suggests, it is similar to CZF, but is slightly 'less' constructive. It admits the following axioms:
 
@@ -22,8 +22,8 @@ These systems are called 'automated theorem provers' and are quite a mature tech
 - The 'axiom of the union set'. This says that if $x$ is a set, then the union of $x$ (written as `⋃x` in Coq) is also a set.
 - The 'axiom of the empty set'. This says that there is a set with no elements, which I write as $\emptyset$ or `∅` in Coq.
 - The 'axiom of the pair'; if $a$ and $b$ are sets, then $\{a, b\}$ is a set. When used in conjunction with the above two axioms, this means that we can write sets by listing their elements.
-- The 'axiom of infinity'. Commonly used as a 'superset' of the natural numbers, this is a set $\infty$ such that if $\emptyset \in \infty$ and if $x \in \infty$, then $\bigcup \{x, \{x\}\} \in \infty$.
-- The 'axiom of seperation'. If $x$ is a set, then we can construct a new set $y$ of all the members $a \in x$ such that $\phi(x)$ holds for some property $\phi$. Informally, this is commonly written $\{a \in x : \phi(x)\}$ but I prefer the notation $\{a : \forall a \in x, \phi(x)\}$.
+- The 'axiom of infinity'. Commonly used as a 'superset' of the natural numbers, this is a set $\infty$ such that if $\emptyset \in \infty$ and if $x \in \infty$, then $\mathrm{Suc}(x) \in \infty$, where $\mathrm{Suc}(x) = \bigcup \{x, \{x\}\}$.
+- The 'axiom of seperation'. If $x$ is a set, then we can construct a new set $y$ of all the members $a \in x$ such that $\phi(x)$ holds for some property $\phi$. Informally, this is commonly written $\{a \in x : \phi(x)\}$, but I also use $\{a : \forall a \in x, \phi(x)\}$.
 - The 'axiom of replacement'. This is similar to the above axiom, except instead of selecting the members of $x$ that satisfy some property, we construct a new set of all the $f(a)$ where $a \in x$, for some _functional predicate_ $f$ (such a predicate is a property $\phi(x,y)$ where for all $x$, a $y$ exists; we write this $y$ as $f(x)$). I write this $\{f(a) : \forall a \in x\}$.
 - The 'axiom of the powerset'. This states that for all $x$, there is a set $\mathcal{P}(x)$ consisting of the subsets of $x$. This axiom is non-constructive as there is no algorithm that (even given an infinite amount of time) can produce all the subsets of any _infinite_ set.
 - The 'axiom of $\in$-induction'. This is essentially [well-founded induction](https://en.wikipedia.org/wiki/Well-founded_relation#Induction_and_recursion) on the $\in$ relation; if a property holding of all $a \in x$ implies that the property holds of $x$, then the property holds of all sets.
@@ -65,7 +65,7 @@ That derivation is almost identical to our derivation for the cartesian product!
 Lemma cartesian_product_is_extreme_disjoint_union :
   forall {A B}, A × B ≡ disjoint_union (fun x (_: x ∈ A) => B).
 Proof.
-  intros. exact equiv_refl.
+  intros. reflexivity.
 Qed.
 ```
 
@@ -90,6 +90,28 @@ Notation "x + y" := (disjoint_union2 x y) (at level 60).
 Lemma disjoint_union2_prop : forall {A B x},
   x ∈ A + B <-> (exists a, x ≡ left a /\ a ∈ A) \/ (exists b, x ≡ right b /\ b ∈ B).
 ```
+
+We can derive a stronger form of our axiom of infinity by seperating out the elements of $\infty$ that satisfy the _inductive property_. The inductive property, which is written $\mathrm{Ind}(x)$, says that 'if $\phi(\emptyset)$ and for all $\phi(a)$ we can derive $\phi(\mathrm{Suc}(a))$, then we can derive $\phi(x)$ for any property $\phi$':
+
+$$
+\mathrm{Ind}(x) = \forall \phi, (\phi(\emptyset) \wedge \forall a, \phi(a) \to \phi(\mathrm{Suc}(a))) \to \phi(x)
+$$
+
+If for any $x$ we have $\mathrm{Ind}(x)$, then we say that $x$ is in the _standard model_ of arithmetic - this is pretty much the same as saying $x$ can be expressed by repeating the $\mathrm{Suc}$ operation over the empty set a finite number of times.
+
+It is important to note that the inductive property cannot be written in 'first-order' logic where only quantification over sets is allowed; in order to express the inductive property correctly, we _must_ quantify over all propositional functions $\phi$, which requires '[second-order](https://en.wikipedia.org/wiki/Second-order_logic)' logic. It is possible to _construct_ the standard model of arithmetic in ZF using only first-order logic, but not express the inductive property in it.
+
+We can construct the standard model of arithmetic (which we call $\omega$) by selecting the elements $x \in \infty$ that have the inductive property:
+
+$$
+\omega = \{x : \forall x \in \infty, \mathrm{Ind}(x)\}
+$$
+
+As, by definition, all elements of $\omega$ have the inductive property, we can prove that one can perform mathematical induction over $\omega$ itself; if, for any property $\phi$, both $\phi(\emptyset)$ and $\forall n, \phi(n) \to \phi(\mathrm{Suc}(n))$ hold, then $\phi(x)$ holds for all $x \in \omega$. This makes $\omega$ so useful for further constructions that it is sometimes even stated axiomatically, as the axiom of _strong infinity_:
+
+$$
+\exists \omega, \forall \phi, \phi(\emptyset) \wedge (\forall n, \phi(n) \to \phi(\mathrm{Suc}(n))) \to \forall x \in \omega, \phi(x)
+$$
 
 The exponential set $A^B$, of functions $f : B \to A$ has a pretty obvious construction; all functions $B \to A$ are subsets of $B \times A$, and so to construct $A^B$ we can simply restrict $\mathcal{P}(B \times A)$ to only those subsets $R$ which are *functional* (for all $x \in B$, if $\langle x, y \rangle \in R$ for a $y \in A$, then $y$ is unique) and *left-total* (for all $x \in B$, there exists a $y \in A$ such that $\langle x, y \rangle \in R$), using seperation:
 

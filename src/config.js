@@ -6,6 +6,7 @@ const extensions = {
 const config = {
     indir: "./content/",
     outdir: "./site/",
+    assets: "./assets/",
     extensions: extensions,
 }
 
