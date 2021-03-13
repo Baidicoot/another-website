@@ -16,7 +16,7 @@ Using non-constructive theories, such as [Zermelo-Fraenkel Set Theory](https://e
 
 Most set theories are but an extension of an 'underlying language' of [logic](https://en.wikipedia.org/wiki/First-order_logic) (classical logic for ZF, intuonistic logic for CZF) with the aforementioned axioms for set construction. This underlying language usually includes the normal logical operators and quantifiers, and a statement in this language is called a _predicate_. Luckily for us, many logics have already been implemented as programs for computers. This means we need not check our proofs manually; the program automatically checks the soundness of our reasoning for us!
 
-These systems are called 'automated theorem provers' and are quite a mature technology; I will extend one, [Coq](https://coq.inria.fr/), with axioms for the construction of sets. The actual set theory I will use is called 'Intuonistic Zermelo-Fraenkel Set Theory'; as the name suggests, it is similar to CZF, but is slightly 'less' constructive. It admits the following axioms:
+These systems are called 'automated theorem provers' and are quite a mature technology; I will extend one, [Coq](https://coq.inria.fr/), with axioms for the construction of sets. The actual set theory I will use is called 'Intuonistic Zermelo-Fraenkel Set Theory' (IZF); as the name suggests, it is similar to CZF, but is slightly 'less' constructive. It uses the following axioms:
 
 - The 'axiom of extensional equality'. This says that if all the members of two sets are shared, then the two sets are equal.
 - The 'axiom of the union set'. This says that if $x$ is a set, then the union of $x$ (written as `⋃x` in Coq) is also a set.
@@ -45,13 +45,13 @@ Notation "A × B" := (cartesian_product A B) (at level 60, right associativity).
 Lemma is_cartesian_product : forall A B x y, x ∈ A -> y ∈ B -> ⟨x,y⟩ ∈ A × B.
 ```
 
-The disjoint union, or coproduct, of an indexed set $(x_i)_{i \in I}$ is the union of $(x_i)$, except every element is 'tagged' with the index of the set from which it came, meaning that for a $y \in x_j$ for some $j \in I$, then $\langle j, y \rangle \in \bigsqcup_{i \in I} x_i$, where $\bigsqcup$ is the disjoint union operation.
+The disjoint union, or coproduct, of an indexed set $(x_i)_{i \in I}$ is similar to the union of $(x_i)_{i \in I}$, except every element is 'tagged' with the index of the set which it is a member of. For example, for an $y \in x_j$ for some $j \in I$, then $\langle j, y \rangle \in \bigsqcup_{i \in I} x_i$, where $\bigsqcup$ is the disjoint union operation.
 
-The disjoint union of a set $(x_i)_{i \in I}$ can be constructed using the axioms of IZF, by taking the replacement of $(x_i)$ with, given a $j \in I$, the replacement of $x_j$ with $\langle j, y \rangle$ for a given $y \in x_j$, and finding the union of the resultant set. In set notation, this is $\bigcup\{\{\langle j, y \rangle : \forall y \in x_j\} : \forall j \in I\}$, which is easily converted to Coq:
+The disjoint union of an indexed set $(x_i)_{i \in I}$ can be constructed using the axioms of IZF, similarly to the construction of the Cartesian product. First, for a given $j \in I$, take the replacement of $x_j$ with $f(x) = \langle j, x \rangle$, and call this operation $g(j)$. The disjoint union is then the union of the replacement of $g$ over the elements of $I$. In set notation, this is $\bigcup\{\{\langle j, y \rangle : \forall y \in x_j\} : \forall j \in I\}$, which is easily represented in Coq (representing an indexed set $(x_i)_{i \in I}$ as a function `forall i, i ∈ I -> set`):
 
 ```coq
-Definition disjoint_union {I} (f: forall j, j ∈ I -> set) :=
-  ⋃(replacement (fun j p => replacement (fun y (_: y ∈ f j p)  => ⟨j,y⟩))).
+Definition disjoint_union {I} (f: forall i, i ∈ I -> set) :=
+  ⋃(replacement (fun j H => replacement (fun y (_: y ∈ f j H)  => ⟨j,y⟩))).
 
 Lemma is_disjoint_union :
   forall {S f x y}
@@ -59,7 +59,7 @@ Lemma is_disjoint_union :
          y ∈ f x p -> ⟨x,y⟩ ∈ disjoint_union f.
 ```
 
-That derivation is almost identical to our derivation for the Cartesian product! In fact, the Cartesian product is *definitionally equal* to the case of the disjoint union where $x_i$ is always $B$ for any $i \in A$:
+That derivation is almost identical to our derivation for the Cartesian product! In fact, the Cartesian product is *definitionally equal* to the case of the disjoint union where $x_j$ is always $B$ for any $j \in A$:
 
 ```coq
 Lemma cartesian_product_is_extreme_disjoint_union :
