@@ -1,6 +1,7 @@
 ---
 description: homepage
 date: 02/06/2020
+title: Home
 ---
 ## Projects
 - [An Open Type Theory](https://github.com/Baidicoot/att)
