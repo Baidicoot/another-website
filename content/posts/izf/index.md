@@ -310,14 +310,14 @@ f(\mathrm{left}(x)) = \mathrm{Suc}(f(x))
 \end{gathered}
 $$
 
-To construct a description $\Gamma_f$ for this function (such that $\Gamma_f f = f$), notice that the $f(\mathrm{right}(\bullet)) = \emptyset$ case is non-recursive; therefore, $\langle \mathrm{right}(\bullet), \emptyset \rangle$ should be a base case and an element of $\Gamma_f(\emptyset)$. Then, for the recursive case, with every iteration of $\Gamma_f$, we can 'add' a new mapping $\langle \mathrm{left}(x), \mathrm{Suc}(y) \rangle$ to $\Gamma_f(F)$, provided that $F(x) = y$; given the set-theoretic encoding of functions, this is the same as saying $\langle x, y \rangle \in F$. Iterating $\Gamma_f$ like we did for inductive definitions should then cover all cases of $f$.
+To construct a description $\Gamma_f$ for this function (such that $\Gamma_f(f) = f$), notice that the $f(\mathrm{right}(\bullet)) = \emptyset$ case is non-recursive; therefore, $\langle \mathrm{right}(\bullet), \emptyset \rangle$ should be a base case and an element of $\Gamma_f(\emptyset)$. Then, for the recursive case, with every iteration of $\Gamma_f$, we can 'add' a new mapping $\langle \mathrm{left}(x), \mathrm{Suc}(y) \rangle$ to $\Gamma_f(F)$, provided that $F(x) = y$; given the set-theoretic encoding of functions, this is the same as saying $\langle x, y \rangle \in F$. Iterating $\Gamma_f$ like we did for inductive definitions should then cover all cases of $f$.
 
 Unlike in a normal inductive definition, we do _not_ want to be able to discriminate between the base and recursive cases of $f$, so we should use the union instead of the disjoint union:
 
 $$
 \begin{gathered}
 \Gamma_f(F) = \{ \langle \mathrm{right}(\bullet), \emptyset \rangle \} \cup \{ \langle \mathrm{left}(x), \mathrm{Suc}(y) \rangle : \forall x \in \mathbb{N}, \forall y \in \omega, \langle x, y \rangle \in F \} \\
-f = \bigcup_{i = 0}^\omega \Gamma_f^i(\emptyset)
+f = \bigcup_{i = 0}^\infty \Gamma_f^i(\emptyset)
 \end{gathered}
 $$
 
@@ -362,7 +362,7 @@ $$
 We can now use this description to construct the function itself:
 
 $$
-\mathrm{lift} = \bigcup_{i = 0}^\omega \Gamma_\mathrm{lift}^i(\emptyset)
+\mathrm{lift} = \bigcup_{i = 0}^\infty \Gamma_\mathrm{lift}^i(\emptyset)
 $$
 
 To express this in our Coq model of set theory, I attempt to replicate the usual set-builder notation shown above. Unfortunately, the notation `{x | P}` is already used in Coq, so I have to make do with a textual form; `for x, y, z ∈ S, exp` is simply the repeated application of the axioms of replacement on `exp`, introducing `x`, `y` and `z` as variables bound within the replacement. The expression `given P, exp` is a strange one; if a proof of `P` cannot be provided, it is the empty set. Otherwise, it is the set `exp`. I use this to emulate the conditional part of set-builder notation:
